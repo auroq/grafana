@@ -1,14 +1,14 @@
 FROM debian:stretch-slim
 
-ARG GRAFANA_TGZ="grafana-latest.linux-x64.tar.gz"
+ARG VERSION=5.3.0
+ARG ARCH=arm64
 
-RUN apt-get update && apt-get install -qq -y tar && \
+RUN apt-get update && apt-get install -qq -y tar wget && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
 
-COPY ${GRAFANA_TGZ} /tmp/grafana.tar.gz
-
-RUN mkdir /tmp/grafana && tar xfvz /tmp/grafana.tar.gz --strip-components=1 -C /tmp/grafana
+RUN wget https://s3-us-west-2.amazonaws.com/grafana-releases/release/grafana-${VERSION}.linux-${ARCH}.tar.gz -O /tmp/grafana.tar.gz && \
+    mkdir /tmp/grafana && tar xfvz /tmp/grafana.tar.gz --strip-components=1 -C /tmp/grafana
 
 FROM debian:stretch-slim
 
